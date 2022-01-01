@@ -6,7 +6,7 @@ export class AxiosHttpClient implements HttpGetClient{
         let axiosReponse = {} as AxiosResponse ;
 
         try{
-            axiosReponse = await axios.post(params.url, { headers: params.headers })
+            axiosReponse = await axios.get(params.url, { headers: params.headers })
         }
         catch(error){
             console.log(error)

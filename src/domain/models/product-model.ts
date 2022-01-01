@@ -1,11 +1,11 @@
 export type Product = {
-    id: Number
+    id: number
     name: string
-    price: Number
+    price: number
     description: string
     key_image: string
-    url_image: string
-    category_id: Number
+    image_url: string
+    category_id: number
     category_name: string
     category_color: string
     category_icon: string

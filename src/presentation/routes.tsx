@@ -1,12 +1,12 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
-import { ProductsPage } from './pages/products'
+import { ProductsFactory } from '../main/factories/pages/Products'
 
 export const RoutesComponent = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<ProductsPage />} />
+                <Route path="/" element={<ProductsFactory />} />
             </Routes>
         </BrowserRouter>
     )
