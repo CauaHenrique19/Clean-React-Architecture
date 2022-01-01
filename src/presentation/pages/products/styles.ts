@@ -70,11 +70,6 @@ export const ProductListItem = styled.div`
     }
 `
 
-export const ButtonsContainer = styled.div`
-    display: flex;
-    align-items: center;
-`
-
 export const ButtonEdit = styled(Button)`
     width: 45px;
     height: 45px;
@@ -93,5 +88,35 @@ export const ButtonDelete = styled(Button)`
 
     :hover{
         background-color: var(--dark-danger-color);
+    }
+`
+
+export const ImagePreviw = styled.div`
+    height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    border: 2px dashed rgba(216, 216, 216, 0.171);
+    cursor: pointer;
+    padding: 7px;
+    
+
+    i{
+        font-size: 4rem;
+    }
+
+    h2{
+        text-align: center;
+        font-weight: 300;
+    }
+
+    img{
+        width: 100%;
+        height: 300px;
+        border-radius: 10px;
     }
 `
