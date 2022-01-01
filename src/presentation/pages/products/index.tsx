@@ -3,6 +3,7 @@ import { Category } from "../../../domain/models/category-model"
 import { Product } from "../../../domain/models/product-model"
 import { GetCategories } from "../../../domain/usecases/get-models"
 import { GetProducts } from "../../../domain/usecases/get-products"
+import { PostProduct } from "../../../domain/usecases/post-product"
 import { Modal } from "../../components/modal"
 import { Container, ButtonsContainer, InputContainer, Label, Input, TextArea, Row, Select } from "../../styles/global"
 import { 
@@ -19,10 +20,11 @@ import {
 
 type Props = {
     getProducts: GetProducts
+    postProduct: PostProduct
     getCategories: GetCategories
 }
 
-export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) => {
+export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCategories }) => {
 
     const [products, setProducts] = useState<Product[]>([])
     const [categories, setCategories] = useState<Category[]>([])
@@ -37,6 +39,18 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) =
     const [viewModal, setViewModal] = useState<Boolean>(false);
     const fileInput = useRef<HTMLInputElement>(null)
 
+    const handleSubmit = () => {
+        if(!id && name){
+            handleCreateProduct()
+        }
+        else if(id && name){
+            handleEditProduct()
+        }
+        else{
+            handleDeleteProduct()
+        }
+    }
+
     const handleGetProducts = useCallback(async () => {
         const productsApi = await getProducts.get();
         setProducts([...productsApi])
@@ -45,10 +59,23 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) =
     const handleGetCategories = useCallback(async () => {
         const categoriesApi = await getCategories.get();
         setCategories([...categoriesApi])
-    }, [getCategories, viewModal])
+    }, [getCategories])
+
+    const handleCreateProduct = async () => {
+        const productApi = await postProduct.post({ name, price, description, category_id, image: image! })
+        console.log(productApi)
+    }
+
+    const handleEditProduct = () => {
+
+    }
+
+    const handleDeleteProduct = () => {
+
+    }
 
     useEffect(() => { handleGetProducts() }, [handleGetProducts])
-    useEffect(() => { handleGetCategories() }, [handleGetCategories])
+    useEffect(() => { handleGetCategories() }, [handleGetCategories, viewModal])
 
     return (
         <ProductsContainer>
@@ -57,7 +84,7 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) =
                 <Modal 
                     title="Cadastrar produto"
                     handleClose={() => setViewModal(false)}
-                    handleSubmit={() => {}}
+                    handleSubmit={() => handleSubmit()}
                 >
                     <Row>
                         <InputContainer inRow={true} >
@@ -75,7 +102,7 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) =
                             <option value="0">Selecione a categoria</option>
                             {
                                 categories.map((category) => (
-                                    <option value={category.id}>{category.name}</option>
+                                    <option key={category.id} value={category.id}>{category.name}</option>
                                 ))
                             }
                         </Select>
@@ -88,12 +115,7 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) =
                         <InputContainer inRow={true}>
                             <Label htmlFor="image">Imagem</Label>
                             <input ref={fileInput} onChange={(e) => setImage(e.target.files![0])} type="file" hidden={true} />
-                            <ImagePreviw id="image" 
-                                onClick={(e) => {
-                                    fileInput.current && fileInput.current.click()
-                                    console.log(e.target)
-                                }}
-                            >
+                            <ImagePreviw id="image" onClick={(e) => fileInput.current && fileInput.current.click()}>
                                 { !image && <i className="bi bi-image"></i> }
                                 { !image && <h2>Clique aqui para selecionar a imagem!</h2> }
                                 { image && <img src={URL.createObjectURL(image)} alt="imagem" /> }

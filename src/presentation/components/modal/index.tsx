@@ -20,7 +20,7 @@ export const Modal : React.FC<Props> = ({ children, title, width, submitText, ha
                 <ModalWrapper>
                     {children}
                     <ButtonsModalContainer>
-                        <SubmitButton>{submitText || 'Cadastrar'}</SubmitButton>
+                        <SubmitButton onClick={handleSubmit} >{submitText || 'Cadastrar'}</SubmitButton>
                         <CancelButton onClick={handleClose}>Cancelar</CancelButton>
                     </ButtonsModalContainer>
                 </ModalWrapper>
