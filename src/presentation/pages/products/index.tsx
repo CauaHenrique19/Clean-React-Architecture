@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import { Category } from "../../../domain/models/category-model"
 import { Product } from "../../../domain/models/product-model"
+import { GetCategories } from "../../../domain/usecases/get-models"
 import { GetProducts } from "../../../domain/usecases/get-products"
 import { Modal } from "../../components/modal"
 import { Container, ButtonsContainer, InputContainer, Label, Input, TextArea, Row, Select } from "../../styles/global"
@@ -17,11 +19,13 @@ import {
 
 type Props = {
     getProducts: GetProducts
+    getCategories: GetCategories
 }
 
-export const ProductsPage : React.FC<Props> = ({ getProducts }) => {
+export const ProductsPage : React.FC<Props> = ({ getProducts, getCategories }) => {
 
     const [products, setProducts] = useState<Product[]>([])
+    const [categories, setCategories] = useState<Category[]>([])
 
     const [id, setId] = useState<number>(0)
     const [name, setName] = useState<string>("")
@@ -38,7 +42,13 @@ export const ProductsPage : React.FC<Props> = ({ getProducts }) => {
         setProducts([...productsApi])
     }, [getProducts])
 
+    const handleGetCategories = useCallback(async () => {
+        const categoriesApi = await getCategories.get();
+        setCategories([...categoriesApi])
+    }, [getCategories, viewModal])
+
     useEffect(() => { handleGetProducts() }, [handleGetProducts])
+    useEffect(() => { handleGetCategories() }, [handleGetCategories])
 
     return (
         <ProductsContainer>
@@ -63,6 +73,11 @@ export const ProductsPage : React.FC<Props> = ({ getProducts }) => {
                         <Label htmlFor="category">Categoria</Label>
                         <Select id="category" value={category_id} onChange={(e) => setCategoryId(parseFloat(e.target.value))}>
                             <option value="0">Selecione a categoria</option>
+                            {
+                                categories.map((category) => (
+                                    <option value={category.id}>{category.name}</option>
+                                ))
+                            }
                         </Select>
                     </InputContainer>
                     <Row>

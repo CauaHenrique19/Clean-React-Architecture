@@ -124,4 +124,8 @@ export const Select = styled.select`
     :focus{
         border-color: var(--primary-color);
     }
+
+    option{
+        color: black;
+    }
 `
