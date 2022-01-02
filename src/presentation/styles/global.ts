@@ -22,6 +22,8 @@ export const GlobalStyle = createGlobalStyle`
         --background-color: #222831;
         --primary-font-color: white;
         --border-color: rgba(128, 128, 128, 0.26);
+
+        --width-sidebar: 300px;
     }
     body{
         background-color: var(--background-color);
@@ -31,7 +33,7 @@ export const GlobalStyle = createGlobalStyle`
 export const Container = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 20px 150px 20px 150px;
+    padding: 20px;
 `
 
 export const ButtonsContainer = styled.div`

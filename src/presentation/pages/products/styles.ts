@@ -1,17 +1,31 @@
 import styled from 'styled-components';
-import { Button } from '../../styles/global';
+import { Button, Container } from '../../styles/global';
 
 export const ProductsContainer = styled.div`
     display: flex;
+    width: 100vw;
+    height: 100vh;
+
+    ${Container}{
+        height: calc(100% - 120px);
+    }
+`
+
+export const Main = styled.main`
+    width: calc(100% - var(--width-sidebar));
+    height: 100%;
+    display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 `
 
 export const Header = styled.header`
-    height: 10vh;
+    width: 100vw;
+    height: 120px;
     display: flex;
     align-items: center;
     background-color: var(--primary-color);
-    padding: 0 150px;
+    padding: 0 20px;
 `
 
 export const HeaderProducts = styled.div`

@@ -6,6 +6,7 @@ import { GetProducts } from "../../../domain/usecases/get-products"
 import { PostProduct } from "../../../domain/usecases/post-product"
 import { UpdateProduct } from "../../../domain/usecases/update-product"
 import { Modal } from "../../components/modal"
+import { Sidebar } from "../../components/sidebar"
 import { Container, ButtonsContainer, InputContainer, Label, Input, TextArea, Row, Select } from "../../styles/global"
 import { 
     ButtonDelete, 
@@ -14,6 +15,7 @@ import {
     Header, 
     HeaderProducts, 
     ImagePreviw, 
+    Main, 
     ProductListItem, 
     ProductsContainer, 
     ProductsContent 
@@ -147,49 +149,52 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, updat
                     </Row>
                 </Modal>
             }
-            <Header>
-                <h1>Painel Administrador</h1>
-            </Header>
-            <Container>
-                <HeaderProducts>
-                    <h1>Produtos</h1>
-                    <ButtonRegisterProduct onClick={() => setViewModal(true)}>Cadastrar Produto</ButtonRegisterProduct>
-                </HeaderProducts>
-                <ProductsContent>
-                    {
-                        products.map((product) => (
-                            <ProductListItem key={product.id}>
-                                <img src={product.image_url} alt={product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}/>
-                                <h2>{product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}</h2>
-                                <h2>
-                                    {
-                                        parseFloat(product.price.toString())
-                                            .toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
-                                    }
-                                </h2>
-                                <h2>{product.category_name}</h2>
-                                <ButtonsContainer>
-                                    <ButtonEdit 
-                                        onClick={() => {
-                                            setViewModal(true)
-                                            setId(product.id)
-                                            setName(product.name)
-                                            setPrice(product.price)
-                                            setCategoryId(product.category_id)
-                                            setDescription(product.description)
-                                            setImageUrl(product.image_url)
-                                            setKeyImage(product.key_image)
-                                        }}
-                                    >
-                                        <i className="bi bi-pencil-square"></i>
-                                    </ButtonEdit>
-                                    <ButtonDelete><i className="bi bi-trash"></i></ButtonDelete>
-                                </ButtonsContainer>
-                            </ProductListItem>
-                        ))
-                    }
-                </ProductsContent>
-            </Container>
+            <Sidebar></Sidebar>
+            <Main>
+                <Header>
+                    <h1>Painel Administrador</h1>
+                </Header>
+                <Container>
+                    <HeaderProducts>
+                        <h1>Produtos</h1>
+                        <ButtonRegisterProduct onClick={() => setViewModal(true)}>Cadastrar Produto</ButtonRegisterProduct>
+                    </HeaderProducts>
+                    <ProductsContent>
+                        {
+                            products.map((product) => (
+                                <ProductListItem key={product.id}>
+                                    <img src={product.image_url} alt={product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}/>
+                                    <h2>{product.name.length > 50 ? `${product.name.substring(0, 50)}...` : product.name}</h2>
+                                    <h2>
+                                        {
+                                            parseFloat(product.price.toString())
+                                                .toLocaleString('pt-BR', { minimumFractionDigits: 2, style: 'currency', currency: 'BRL' })
+                                        }
+                                    </h2>
+                                    <h2>{product.category_name}</h2>
+                                    <ButtonsContainer>
+                                        <ButtonEdit 
+                                            onClick={() => {
+                                                setViewModal(true)
+                                                setId(product.id)
+                                                setName(product.name)
+                                                setPrice(product.price)
+                                                setCategoryId(product.category_id)
+                                                setDescription(product.description)
+                                                setImageUrl(product.image_url)
+                                                setKeyImage(product.key_image)
+                                            }}
+                                        >
+                                            <i className="bi bi-pencil-square"></i>
+                                        </ButtonEdit>
+                                        <ButtonDelete><i className="bi bi-trash"></i></ButtonDelete>
+                                    </ButtonsContainer>
+                                </ProductListItem>
+                            ))
+                        }
+                    </ProductsContent>
+                </Container>
+            </Main>
         </ProductsContainer>
     )
 }
