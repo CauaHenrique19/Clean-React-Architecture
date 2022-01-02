@@ -4,6 +4,7 @@ import { Product } from "../../../domain/models/product-model"
 import { GetCategories } from "../../../domain/usecases/get-models"
 import { GetProducts } from "../../../domain/usecases/get-products"
 import { PostProduct } from "../../../domain/usecases/post-product"
+import { UpdateProduct } from "../../../domain/usecases/update-product"
 import { Modal } from "../../components/modal"
 import { Container, ButtonsContainer, InputContainer, Label, Input, TextArea, Row, Select } from "../../styles/global"
 import { 
@@ -21,10 +22,11 @@ import {
 type Props = {
     getProducts: GetProducts
     postProduct: PostProduct
+    updateProduct: UpdateProduct
     getCategories: GetCategories
 }
 
-export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCategories }) => {
+export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, updateProduct, getCategories }) => {
 
     const [products, setProducts] = useState<Product[]>([])
     const [categories, setCategories] = useState<Category[]>([])
@@ -34,6 +36,8 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCa
     const [price, setPrice] = useState<number>(0)
     const [description, setDescription] = useState<string>("")
     const [category_id, setCategoryId] = useState<number>(0)
+    const [key_image, setKeyImage] = useState<string>("")
+    const [image_url, setImageUrl] = useState<string>("")
     const [image, setImage] = useState<File | null>()
 
     const [viewModal, setViewModal] = useState<Boolean>(false);
@@ -62,16 +66,35 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCa
     }, [getCategories])
 
     const handleCreateProduct = async () => {
-        const productApi = await postProduct.post({ name, price, description, category_id, image: image! })
-        console.log(productApi)
+        await postProduct.post({ name, price, description, category_id, image: image! })
+        closeModal(setViewModal)
     }
 
-    const handleEditProduct = () => {
+    const handleEditProduct = async () => {
+        const productApi = await updateProduct.update({ id, price, name, description, category_id, image_url, key_image, image: image! })
+        productApi.image_url = `${productApi.image_url}?${Date.now()}`
 
+        const index = products.findIndex(product => product.id === productApi.id)
+        products[index] = productApi
+
+        setProducts([...products])
+        closeModal(setViewModal)
     }
 
     const handleDeleteProduct = () => {
 
+    }
+
+    const closeModal = (fnCloseModal : (value: Boolean) => void) => {
+        fnCloseModal(false)
+        setId(0)
+        setName("")
+        setPrice(0)
+        setCategoryId(0)
+        setDescription("")
+        setImageUrl("")
+        setKeyImage("")
+        setImage(null)
     }
 
     useEffect(() => { handleGetProducts() }, [handleGetProducts])
@@ -83,7 +106,7 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCa
                 viewModal &&
                 <Modal 
                     title="Cadastrar produto"
-                    handleClose={() => setViewModal(false)}
+                    handleClose={() => closeModal(setViewModal)}
                     handleSubmit={() => handleSubmit()}
                 >
                     <Row>
@@ -116,9 +139,9 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCa
                             <Label htmlFor="image">Imagem</Label>
                             <input ref={fileInput} onChange={(e) => setImage(e.target.files![0])} type="file" hidden={true} />
                             <ImagePreviw id="image" onClick={(e) => fileInput.current && fileInput.current.click()}>
-                                { !image && <i className="bi bi-image"></i> }
-                                { !image && <h2>Clique aqui para selecionar a imagem!</h2> }
-                                { image && <img src={URL.createObjectURL(image)} alt="imagem" /> }
+                                { !image && !image_url && <i className="bi bi-image"></i> }
+                                { !image && !image_url && <h2>Clique aqui para selecionar a imagem!</h2> }
+                                { image ? <img src={URL.createObjectURL(image)} alt="imagem" /> : image_url ? <img src={image_url} alt="imagem" /> : null }
                             </ImagePreviw>
                         </InputContainer>
                     </Row>
@@ -146,7 +169,20 @@ export const ProductsPage : React.FC<Props> = ({ getProducts, postProduct, getCa
                                 </h2>
                                 <h2>{product.category_name}</h2>
                                 <ButtonsContainer>
-                                    <ButtonEdit><i className="bi bi-pencil-square"></i></ButtonEdit>
+                                    <ButtonEdit 
+                                        onClick={() => {
+                                            setViewModal(true)
+                                            setId(product.id)
+                                            setName(product.name)
+                                            setPrice(product.price)
+                                            setCategoryId(product.category_id)
+                                            setDescription(product.description)
+                                            setImageUrl(product.image_url)
+                                            setKeyImage(product.key_image)
+                                        }}
+                                    >
+                                        <i className="bi bi-pencil-square"></i>
+                                    </ButtonEdit>
                                     <ButtonDelete><i className="bi bi-trash"></i></ButtonDelete>
                                 </ButtonsContainer>
                             </ProductListItem>

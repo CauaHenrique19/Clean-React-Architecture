@@ -1,6 +1,7 @@
 import { RemoteGetCategories } from "../../../../data/usecases/getcategories/remote-get-categories";
 import { RemoteGetProducts } from "../../../../data/usecases/getproducts/remote-get-products";
 import { RemotePostProduct } from "../../../../data/usecases/postproduct/remote-post-product";
+import { RemoteUpdateProduct } from "../../../../data/usecases/updateproduct/remote-update-product";
 import { AxiosHttpClient } from "../../../../infra/axios-http-client"
 import { ProductsPage } from "../../../../presentation/pages/products";
 
@@ -18,6 +19,11 @@ export const ProductsFactory = () => {
         axiosHttpClient
     )
 
+    const remoteUpdateProduct = new RemoteUpdateProduct(
+        `${api_url}/products`,
+        axiosHttpClient
+    )
+
     const remoteGetCategories = new RemoteGetCategories(
         `${api_url}/categories`,
         axiosHttpClient
@@ -27,7 +33,8 @@ export const ProductsFactory = () => {
         <ProductsPage 
             getProducts={remoteGetProducts} 
             getCategories={remoteGetCategories} 
-            postProduct={remotePostProduct} 
+            postProduct={remotePostProduct}
+            updateProduct={remoteUpdateProduct}
         />
     )
 }
